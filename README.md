@@ -10,6 +10,17 @@ under 'way heavy development.
 * [python-mpd2][2]
 * [configobj][3]
 
+## Config file
+
+You'll need a file named `config.ini` that looks like this:
+
+    soundbridge_host = "192.168.0.1"
+    soundbridge_port = "4444"
+    mpd_host = "192.168.0.2"
+    mpd_port = "6600"
+
+leption looks for it in the same directory as leption itself.
+
 ## TODO
 
 See notes.org.
