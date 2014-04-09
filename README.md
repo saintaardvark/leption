@@ -10,6 +10,10 @@ under 'way heavy development.
 * [python-mpd2][2]
 * [configobj][3]
 
+## TODO
+
+See notes.org.
+
 ## Thanks!
 
 * Thomas Henkel (mypiandme at gmail.com) for the idea and [the
