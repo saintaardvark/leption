@@ -1,0 +1,116 @@
+#!/usr/bin/env python
+'''leption:  A Small but Useful(tm) utility to write MPD current song info to a Roku Soundbridge.
+Copyright (C) 2014 Hugh Brown (Saint Aardvark the Carpeted) <aardvark at saintaardvarkthecarpeted.com>
+Copyright (C) 2013 Thomas Henkel <mypiandme at gmail.com>
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+Based on original code by Thomas Henkel (mypiandme at gmail.com),
+found at
+https://myraspberryandme.wordpress.com/2013/06/26/soundbridge-information-display/.
+Many thanks to Thomas for inspiration and for sharing the code!
+
+'''
+
+import sys, time, telnetlib, mpd, traceback
+from configobj import ConfigObj
+import subprocess
+import logging
+#from daemon import Daemon
+
+def run():
+    logging.basicConfig(level=logging.DEBUG)
+    # logging.basicConfig()
+    logging.debug("Made it to run()")
+    try:
+        config = ConfigObj("config.ini")
+    except:
+        logging.exception("Can't read config.ini!")
+        exit(1)
+    oldbanner = ""
+    try:
+        port = 4444
+        tn = telnetlib.Telnet(config['soundbridge_host'], config['soundbridge_port'])
+        sleeptime = 5                              # update interval is 3600 seconds
+        tn.write("\n")
+        tn.read_until("SoundBridge> ")             # wait for prompt
+        tn.write("sketch\n")                       # enter sketch subshell
+        tn.read_until("sketch> ")                  # wait for prompt
+        tn.write("encoding utf8\n")                # set display encoding
+        tn.read_until("sketch> ")                  # wait for prompt
+        # 1, 2, 3, 10, 11, 12, 14 ; 2,10 is nice and indistinguishable;
+        tn.write("font 10\n")                       # select font
+        mpc = mpd.MPDClient()           # create client object
+        mpc.timeout = 10                # network timeout in seconds (floats allowed), default: None
+        mpc.idletimeout = None          # timeout for fetching the result of the idle command is handled seperately, default: None
+        mpc.connect(config['mpd_host'], config['mpd_port'])  # connect to localhost:6600
+        print(mpc.mpd_version)
+        while True:                                   # forever
+            logging.debug("Okay, toppa the loop!")
+            try:
+                if type(mpc.currentsong()['artist'] == list):
+                    artist = mpc.currentsong()['artist']
+                else:
+                    artist = mpc.currentsong()['artist'][0]
+            except:
+                artist = "I have no idea who this is"
+            try:
+                if type(mpc.currentsong()['title'] == list):
+                    title = mpc.currentsong()['title']
+                else:
+                    title = mpc.currentsong()['title'][0]
+            except:
+                title = ""
+            banner = "%s - %s" % (artist, title)
+            logging.debug("%s" % banner)
+            if banner != oldbanner:
+                logging.debug("Not the same!")
+                tn.write("clear\n")
+                tn.read_until("sketch> ")
+                tn.write("text c 0 \"%s\"\n" % banner)
+                tn.read_until("sketch> ")
+                oldbanner = banner
+                logging.debug("Time to sleep...")
+            logging.debug("And now I sleep.")
+            time.sleep(sleeptime)                       # wait some time
+            #myWeather.populate()                        # repopulate weather object
+            sleeptime = 5                            # everything was OK, next read in 60 minutes
+
+    except Exception, e:
+        '''
+        if anything goes wrong the sleeptime is reduced to 10 minutes
+        so maybe we get updated weather next time
+        '''
+        logging.debug("Did I just get an exception? %s" % e)
+        traceback.print_exc()
+        sleeptime = 600
+
+if __name__ == "__main__":
+    #daemon = SBKitchenWriter('/tmp/sbkitchenwriter.pid')
+    print "FIXME: Made it here"
+    run()
+   # if len(sys.argv) == 2:
+   #    if 'start' == sys.argv[1]:
+   #       daemon.start()
+   #    elif 'stop' == sys.argv[1]:
+   #       daemon.stop()
+   #    elif 'restart' == sys.argv[1]:
+   #       daemon.restart()
+   #    else:
+   #       print "Unknown command"
+   #       sys.exit(2)
+   #    sys.exit(0)
+   # else:
+   #    print "usage: %s start|stop|restart" % sys.argv[0]
+   #    sys.exit(2)
