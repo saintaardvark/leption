@@ -8,7 +8,7 @@ under 'way heavy development.
 
 * Python
 * [python-mpd2][2]
-* [configparser][3]
+* [configobj][3]
 
 ## Thanks!
 
@@ -20,4 +20,4 @@ under 'way heavy development.
 [0]: https://myraspberryandme.wordpress.com/2013/06/26/soundbridge-information-display/
 [1]: http://mrsharpoblunto.github.io/foswig.js/
 [2]: https://pypi.python.org/pypi/python-mpd2
-[3]: http://docs.python.org/2/library/configparser.html
+[3]: http://www.voidspace.org.uk/python/configobj.html
