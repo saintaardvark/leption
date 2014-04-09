@@ -1,0 +1,14 @@
+* Notes
+- Add python-mpd2 as requirement
+  - https://pypi.python.org/pypi/python-mpd2/0.5.0
+- The original post included a listener that released the display if
+  there were any commands (listener)
+* TODO Stop if not playing
+  - or at least option.
+* TODO Deal with missing keys
+  Traceback (most recent call last):
+    File "writer.py", line 47, in run
+      if type(herobrine_mpd.currentsong()['artist'] == list):
+  KeyError: 'artist'
+* TODO Print file info if no artist and title
+* TODO Scroll if longer than display
