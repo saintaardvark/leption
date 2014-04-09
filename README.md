@@ -19,7 +19,7 @@ See notes.org.
 * Thomas Henkel (mypiandme at gmail.com) for the idea and [the
   original code][0]; he was generous enough to let me base my code on his.
 
-* The Random [Javascript Project Name Generator][4] for the name "leption"
+* The Random [Javascript Project Name Generator][2] for the name "leption"
 
 [0]: https://myraspberryandme.wordpress.com/2013/06/26/soundbridge-information-display/
 [1]: http://mrsharpoblunto.github.io/foswig.js/
