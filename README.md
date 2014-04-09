@@ -1,5 +1,5 @@
 leption
-=======n
+=======
 
 A Python script to display mpd info on a Roku Soundbridge.  Still
 under 'way heavy development.
